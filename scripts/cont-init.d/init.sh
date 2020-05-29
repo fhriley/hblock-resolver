@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/with-contenv bash
 
 set -eu
 
@@ -18,5 +18,7 @@ if [ ! -f "${KRESD_BLACKLIST_RPZ_FILE:?}" ]; then
 	update-blacklist-rpz
 fi
 
-# Run runit
-exec runsvdir -P "${HOME:?}"/service/
+for ((ii=1; ii<=KRESD_NUM_INSTANCES; ii++)); do
+  mkdir -p /etc/services.d/kresd${ii}
+  ln -s /etc/kresd-service/run /etc/services.d/kresd${ii}/run
+done

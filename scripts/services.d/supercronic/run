@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv sh
+
+set -eu
+
+
+#cd "${HOME:?}"
+exec 2>&1
+exec /usr/local/bin/supercronic /etc/crontab

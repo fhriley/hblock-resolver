@@ -1,21 +1,23 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eu
 
 # supercronic daemon must be running
-if ! is-sv-status supercronic run; then
+if ["$(s6-svstat -o up /run/s6/services/supercronic)" == "false"]; then
 	>&2 printf '%s\n' 'supercronic daemon is not running'
 	exit 1
 fi
 
-# kresd daemon must be running
-if ! is-sv-status kresd run; then
-	>&2 printf '%s\n' 'kresd daemon is not running'
-	exit 1
-fi
+for ((ii=1; ii<=KRESD_NUM_INSTANCES; ii++)); do
+  # kresd daemon must be running
+  if ["$(s6-svstat -o up /run/s6/services/kresd${ii})" == "false"]; then
+    >&2 printf '%s\n' 'kresd${ii} daemon is not running'
+    exit 1
+  fi
+done
 
 # kres-cache-gc daemon must be running
-if ! is-sv-status kres-cache-gc run; then
+if ["$(s6-svstat -o up /run/s6/services/kres-cache-gc)" == "false"]; then
 	>&2 printf '%s\n' 'kres-cache-gc daemon is not running'
 	exit 1
 fi
