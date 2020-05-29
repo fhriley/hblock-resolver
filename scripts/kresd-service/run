@@ -1,6 +1,9 @@
-#!/usr/bin/with-contenv sh
+#!/usr/bin/with-contenv bash
 
 set -eu
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+export INSTANCE="${DIR: -1}"
 
 cd /var/cache/knot-resolver
 exec 2>&1
